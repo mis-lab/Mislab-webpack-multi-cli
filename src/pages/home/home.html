@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+<body>
+	<h1>首页</h1>
+	<a href="./login.html">登录</a><br>
+	<a href="./register.html">注册</a>
+	<br/>
+	<img src=<%= require('@/assets/img/fly.jpg') %>>
+	<!-- 这里img标签结尾不要写/不然会出错 -->
+	<img src="./static/img/Chris.jpg">
+	<!--static中引入的文件不会进行打包  -->
+</body>
+</html>

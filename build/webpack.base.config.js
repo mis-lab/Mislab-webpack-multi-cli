@@ -1,0 +1,68 @@
+const path = require('path');
+const { getPageGenerate, assetsPath } = require('./utils.js');
+const pagesGenerate = getPageGenerate();
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+function resove(dir) {
+	return path.join(__dirname, '..', dir)
+}
+
+module.exports = {
+	// 配置模块的解析方式
+	resolve: {
+		// 配置路径的别名
+	  alias: {
+		  '@': resove('src')
+	  }
+	},
+	entry: pagesGenerate.entry,
+	module: {
+		rules: [
+			{
+				test: /\.js$/,
+				loader: 'babel-loader',
+				// 打包的范围
+				include: [resove('src'), resove('static')]
+			},
+			{
+				test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
+					name: assetsPath('fonts/[name].[hash:7].[ext]')
+				}
+			},
+			{
+				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
+					name: assetsPath('img/[name].[hash:7].[ext]')
+				}
+			},
+			{
+				test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
+					name: assetsPath('media/[name].[hash:7].[ext]')
+				}
+			}
+		]
+	},
+	plugins: [
+		// 拷贝静态资源不做打包处理
+		new CopyWebpackPlugin([
+			{
+				// 定义要拷贝的源目录 
+				from: resove('./static'),
+				// 定义要拷贝到的目标目录
+				to: resove('./dist/static'),
+				// 忽略拷贝指定的文件 
+				ignore: ['.*']
+				// flatten 只拷贝文件不管文件夹      默认是false
+				// toType  file 或者 dir         可选，默认是文件
+			}
+		])
+	]
+}
